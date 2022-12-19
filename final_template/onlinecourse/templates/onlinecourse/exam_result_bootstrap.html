@@ -1,0 +1,79 @@
+{% extends "onlinecourse/layout.html" %}
+{% load static %}
+
+{% block title %}
+{{ course.name }} exam results
+{% endblock title %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            {% if grade > 80 %}
+            <div class="alert alert-success text-center">
+                <span>
+                    <strong>Contratulations, {{ usr_fn }}! </strong>
+                </span>
+                <span>You have passed the exam and completed the course with score {{ grade }} / 100</span>
+            </div>
+            {% else %}
+            <div class="alert alert-danger text-center">
+                <span>
+                    <strong>Failed </strong>
+                </span>
+                <span>Sorry, {{ usr_fn }}! You have failed exam with score of {{ grade }} / 100</span>
+            </div>
+            <a class="btn btn-outline-danger mb-4" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Exam results</h5>
+        </div>
+    </div>
+    {% for question in course.course_questions.all %}
+    <div class="row">
+        <div class="col">
+            <div class="card bg-light mb-3">
+                <div class="card-header">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-8 d-flex justify-content-start">{{ question.content }}</div>
+                            {% for ques_id, ques_grade in grade_earned.items %}
+                            {% if ques_id == question.pk %}
+                            <div class="col-4 d-flex justify-content-end">Grade Earned: {{ ques_grade }} / {{ question.grade }}</div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% for choice in question.question_choices.all %}
+                    {% if choice.is_correct and choice in submission.choices.all %}
+                    <p class="ps-4 text-success">
+                        Correct Answer: {{ choice.content }}
+                    </p>
+                    {% elif choice.is_correct and not choice in submission.choices.all %}
+                    <p class="ps-4 text-warning">
+                        Not Selected Correct Answer: {{ choice.content }}
+                    </p>
+                    {% elif not choice.is_correct and choice in submission.choices.all %}
+                    <p class="ps-4 text-warning">
+                        Wrong Selected: {{ choice.content }}
+                    </p>
+                    {% else %}
+                    <p class="ps-4">
+                        {{ choice.content }}
+                    </p>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock body %}

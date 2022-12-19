@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'onlinecourse/favicon_io/apple-touch-icon.png' %}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'onlinecourse/favicon_io/favicon-32x32.png' %}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'onlinecourse/favicon_io/favicon-16x16.png' %}">
+	<link rel="manifest" href="{% static 'onlinecourse/favicon_io/site.webmanifest' %}">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="IBM DB0211EN - Django Application Development with SQL and Databases, Final Project">
+	<meta name="author" content="Amarpreet Singh Bir">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+	<link id="theme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.3/dist/litera/bootstrap.css">
+	<script src="https://kit.fontawesome.com/2ab71768b4.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+	<link rel="stylesheet" href="{% static 'onlinecourse/sheetstyle.css' %}"></link>
+	<title>{% block title %}{% endblock %}</title>
+	{% block script %}{% endblock %}
+</head>
+
+<body>
+	<div class="row fixed-top" id="topNavbar">
+		<div class="col">
+			<div class="row mx-0 g-0">
+				<div class="col">
+					<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+						<div class="container-fluid">
+							<a class="navbar-brand" href="{% url 'onlinecourse:index' %}">
+								<img class="ms-3" src="{% static 'onlinecourse/favicon_io/favicon-32x32.png' %}" alt="Logo">
+							</a>
+							<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#onlineCourseNav">
+								<span class="navbar-toggler-icon"></span>
+							</button>
+							<div class="collapse navbar-collapse" id="onlineCourseNav">
+								<ul class="navbar-nav me-auto">
+									<li class="nav-item">
+										<a class="nav-link" href="{% url 'onlinecourse:index' %}">
+											Available Courses
+										</a>
+									</li>
+									{% if user.is_authenticated %}
+									<li class="nav-item">
+										<a class="nav-link" href="{% url 'onlinecourse:user_courses' %}">
+											Your Courses
+										</a>
+									</li>
+									{% endif %}
+								</ul>
+								<ul class="nav navbar-nav navbar-right">
+									{% if user.is_authenticated %}
+									<li>
+										<a class="btn btn-light" href="{% url 'onlinecourse:logout' %}">Logout</a>
+									</li>
+									{% else %}
+									<li>
+										<form class="form-inline" action="{% url 'onlinecourse:login' %}" method="post">
+											{% csrf_token %}
+											<div class="input-group">
+												<input type="text" class="form-control me-3" placeholder="Username" name="username">
+												<input type="password" class="form-control me-3" placeholder="Password" name="psw">
+												<button class="btn btn-success rounded me-3" type="submit">Login</button>
+												<a class="btn btn-info rounded" href="{% url 'onlinecourse:registration' %}">Sign Up</a>
+											</div>
+										</form>
+									</li>
+									{% endif %}
+								</ul>
+							</div>
+						</div>
+					</nav>
+				</div>
+			</div>
+			<!-- START: Info Stripe-->
+			<div class="row">
+				<div class="col-sm d-flex justify-content-end fs-4 me-3 align-items-center text-bg-secondary">
+					{% if user.is_authenticated %}
+					Signed in as {{ user.first_name }} {{ user.last_name }}.
+						{% else %}
+						Not signed in.
+						{% endif %}
+				</div>
+			</div>
+			<!-- END: Info Stripe-->
+			<!--START: Messages-->
+			{% if messages %}
+			{% for message in messages %}
+			<div class="row">
+				<div class="col d-flex justify-content-center">
+					<div class="alert alert-{{ message.tags }} alert-dismissible fade show w-auto text-center" role="alert">
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+						<span>
+							<i class="fa-solid fa-circle-info fa-beat-fade" style="--fa-beat-fade-opacity: 0.67; --fa-beat-fade-scale: 1.5;" ></i>
+							<i class="bi bi-info-circle-fill me-2" aria-label="info"></i>
+							{{ message }}
+						</span>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div id="body_block" class="container">
+		{% block body %}{% endblock body %}
+	</div>
+</body>
+
+</html>

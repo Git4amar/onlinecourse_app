@@ -1,0 +1,131 @@
+{% extends "onlinecourse/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ course.name }}
+{% endblock title %}
+
+{% block script %}
+<script src="{% static 'onlinecourse/add_lesson.js' %}"></script>
+<script src="{% static 'onlinecourse/show_exam.js' %}"></script>
+{% endblock script%}
+
+{% block body %}
+<!-- Page content -->
+<div class="container">
+    <div class="row mb-3">
+        <div class="col-lg-8 d-flex justify-content-start">
+            <h2>{{ course.name }}</h2>
+        </div>
+        {% if user_is_instructor %}
+        <div class="col-lg-4 d-flex justify-content-lg-end">
+            <form method="post" action="{% url 'onlinecourse:delete_course' course.pk %}">
+                {% csrf_token %}
+                <button type='submit' class="btn btn-outline-danger">Delete Course</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="d-grid gap-2">
+            <input class="btn-check" onchange="autofocusTitle()" type="checkbox" data-bs-toggle="collapse"
+                data-bs-target="#add_lesson_form" autocomplete="off" checked id="add_lesson_btn">
+            <label class="btn btn-outline-info" for="add_lesson_btn">Add a lesson</label>
+        </div>
+    </div>
+    <div class="row mb-5">
+        {% crispy lesson_form %}
+    </div>
+    {% endif %}
+    <div class="card-columns-vertical">
+        {% for lesson in course.course_lessons.all %}
+        <div class="card mt-1 mb-3">
+            <div class="card-header">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 d-flex justify-content-start align-items-center">
+                            <h5>Lesson {{lesson.order}}: {{ lesson.title|capfirst }}</h5>
+                        </div>
+                        <div class="col-lg-4 d-flex justify-content-lg-end align-items-center">
+                            {% if user_is_instructor %}
+                            <form method="POST" action="{% url 'onlinecourse:delete_lesson' course.pk lesson.pk %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                    class="btn btn-outline-warning">Delete</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">{{lesson.content}}</div>
+        </div>
+        {% empty %}
+        <div class="d-grid gap-2">
+            <span class="display-4 text-center text-info">No lessons exists for this course yet</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% if user.is_authenticated and user_is_enrolled or user_is_instructor %}
+    <form action="{% url 'onlinecourse:exam_submission' course.pk %}" method="post">
+        {% csrf_token %}
+        <div class="container pt-4">
+            <div class="row">
+                <div class="columns">
+                    {% if course.course_questions.count > 0 %}
+                    <div class="d-grid gap-2">
+                        <input class="btn-check" onchange="show_exam(event)" type="checkbox" data-bs-toggle="collapse"
+                            data-bs-target="#" autocomplete="off" checked id="exam_btn">
+                        <label class="btn btn-outline-primary" for="exam_btn">Start Exam</label>
+                    </div>
+                    {% else %}
+                    <div class="d-grid gap-2">
+                        <span class="display-4 text-center text-info">No exam exists for this course yet</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="column">
+                    <div id="exam" class="collapse w-auto">
+                        {% for question in course.course_questions.all %}
+                        <div class="card bg-light mb-3">
+                            <div class="card-header">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-8 d-flex justify-content-start">{{ question.content }}</div>
+                                        <div class="col-4 d-flex justify-content-end">Grade Point: {{ question.grade }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <fieldset class="form-group">
+                                    {% for choice in question.question_choices.all %}
+                                    <div class="form-check">
+                                        <input name="choice_{{ choice.id }}" class="form-check-input" type="checkbox"
+                                            value={{ choice.id }} id={{ choice.id }} data-question={{ question.pk }}>
+                                        <label class="form-check-label" for={{ choice.pk }}>
+                                            {{ choice.content }}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </fieldset>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="row mb-3">
+                            <div class="columns">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success" type="submit" id="submit_exam">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock body %}

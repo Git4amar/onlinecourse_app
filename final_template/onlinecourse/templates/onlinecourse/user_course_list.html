@@ -1,0 +1,85 @@
+{% extends "onlinecourse/layout.html" %}
+{% load static %}
+
+{% block title %}
+Your Courses
+{% endblock title %}
+
+{% block body %}
+<div class="container">
+    <div class="row mb-5">
+        <div class="col d-flex justify-content-center">
+            <h1 class="display-1 text-primary text-decoration-underline"
+                style="font-family: 'Brush Script MT', 'Monaco', 'Times New Roman'">Your Courses</h1>
+        </div>
+    </div>
+    {% if user_profile.role == 'instructor' %}
+    <div class="row">
+        <div class="col">
+            <div class="d-grid gap-2">
+                <a class="btn btn-lg btn-primary" type="button" href="{% url 'onlinecourse:create_course' %}">
+                    <i class="fa-solid fa-book me-2"></i>
+                    Create Course
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row d-flex">
+        {% for course in user_course_list %}
+        <div class="card m-4 p-0" style="width: 36rem;">
+            <div class="container" style="transform: rotate(0);">
+                <a href="{% url 'onlinecourse:course_details' course.id %}" class="stretched-link">
+                    <img class="card-img-left" src="{{MEDIA_URL}}/{{ course.image }}" width="240px" height="240px"
+                        alt="Course image">
+                </a>
+            </div>
+            <div class="card-body bg-light">
+                <h5 class="card-title">{{ course.name }}</h5>
+                <p class="card-text">{{ course.description}}</p>
+                <dl>
+                    <dt>Instructors:</dt>
+                    {% for instructor in course.instructors.all %}
+                    <dd>{{ instructor.user.first_name }} {{ instructor.user.last_name }}</dd>
+                    {% endfor %}
+                </dl>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col d-flex justify-content-start">
+                            {% if user_profile.role == 'learner' %}
+                            <a class="btn btn-primary"
+                                href="{% url 'onlinecourse:course_details' course.id %}">Enter</a>
+                            {% else %}
+                            <a class="btn btn-primary"
+                                href="{% url 'onlinecourse:course_details' course.id %}">Manage</a>
+                            {% endif %}
+                        </div>
+                        {% if user_profile.role == 'learner' %}
+                        <div class="col d-flex justify-content-end">
+                            <form method="post" action="{% url 'onlinecourse:unenroll' course.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-danger" type="submit">Unenroll</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% empty %}
+        <div class="row mb-5">
+            <div class="col d-flex justify-content-center">
+                <h1 class="display-4 text-info" style="font-family: 'Brush Script MT', 'Monaco', 'Times New Roman'">
+                    {% if user_profile.role == 'learner' %}
+                    No enrolled courses. Go to available courses to enroll in a course.
+                    {% else %}
+                    No courses exist yet. Create a course.
+                    {% endif %}
+                </h1>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock body %}

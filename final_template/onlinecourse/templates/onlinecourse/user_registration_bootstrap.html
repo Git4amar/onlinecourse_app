@@ -1,0 +1,35 @@
+{% extends "onlinecourse/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Sign Up
+{% endblock title %}
+
+{% block script %}
+<script src="{% static 'onlinecourse/change_registration_form.js' %}"></script>
+{% endblock script%}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg d-flex justify-content-start align-items-center">
+            <p class="display-1">Sign Up</p>
+        </div>
+        <div class="col-lg d-flex justify-content-end align-items-center">
+            <p class="display-1">as: </p>
+            <select onchange="changeForm(event)" class="form-select form-select-lg" name="roles" id="roles" autofocus>
+                <option value="default" {% if user_is == 'default' %}selected disabled{% endif %}>Choose a role first to enable inputs</option>
+                <option value="learner" {% if user_is == 'learner' %}selected{% endif %}>Learner</option>
+                <option value="instructor" {% if user_is == 'instructor' %}selected{% endif %}>Instructor</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {% crispy learner_form %}
+            {% crispy instructor_form %}
+        </div>
+    </div>
+</div>
+{% endblock body%}
