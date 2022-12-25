@@ -4,10 +4,10 @@
 ### Location: California, USA
 ### Month: December
 ### Year: 2022
-### _[DEMO ONLINE-COURSE APPLICATION](https://www.practice2deploy4amar.com)_
+### <a href="https://www.practice2deploy4amar.com" target="_blank">DEMO ONLINE-COURSE APPLICATION</a>
 
 
-**NOTE: To [demo](https://www.practice2deploy4amar.com), please sign up for the application as a _Learner_.** Sign up as an Instructor has been disabled on purpose to keep the server database clean for demo
+**NOTE: To <a href="https://www.practice2deploy4amar.com" target="_blank">demo</a>, please sign up for the application as a _Learner_.** Sign up as an Instructor has been disabled on purpose to keep the server database clean for demo
 
 ### Brief summary:
 * An online-course appication built using Django, JavaScript, PostgreSQL and Bootstrap. Application is deployed on IBM cloud's Virtual Server for VPC instance. 
