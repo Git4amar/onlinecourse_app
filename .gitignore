@@ -1,0 +1,10 @@
+__pycache__/
+migrations/
+db.sqlite3
+.git
+.db*
+.prod_env
+.dev_env
+.DS*
+venv/
+certbot/
