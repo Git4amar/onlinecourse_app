@@ -150,7 +150,7 @@ def course_details(request, course_id):
             if Enrollment.objects.get(user=get_user(request), course=course):
                 context["user_is_enrolled"] = True
         except Enrollment.DoesNotExist:
-            messages.warning(request, 'You can only access your courses i.e enrolled or created')
+            messages.warning(request, 'You can only access your courses i.e enrolled or created. Please enroll in the course first')
             return redirect('onlinecourse:index')
         else:
             try:
@@ -285,17 +285,19 @@ def create_course(request):
         if course_create_form.is_valid():
             new_course = course_create_form.save(commit=False)
             new_course.name = new_course.name.title()
-            new_course.save()
-            course_create_form.save_m2m()
-            new_course.instructors.add(Instructor.objects.get(user = request.user))
-            for instructor in new_course.instructors.all():
-                print(instructor)
-                instructor_enrollment = Enrollment(user = instructor.user, course = new_course)
-                instructor_enrollment.save()
-            new_course.total_enrollment = new_course.course_enrollments.all().count()
-            new_course.save()
-            messages.success(request, f'Course {new_course.name} successfully created')
-            return redirect('onlinecourse:course_details', course_id = new_course.pk)
+            #new_course.save()
+            #course_create_form.save_m2m()
+            #new_course.instructors.add(Instructor.objects.get(user = request.user))
+            #for instructor in new_course.instructors.all():
+            #    print(instructor)
+            #    instructor_enrollment = Enrollment(user = instructor.user, course = new_course)
+            #    instructor_enrollment.save()
+            #new_course.total_enrollment = new_course.course_enrollments.all().count()
+            #new_course.save()
+            #messages.success(request, f'Course {new_course.name} successfully created')
+            #return redirect('onlinecourse:course_details', course_id = new_course.pk)
+            messages.info(request, f'Reuqest receieved to create {new_course.name} course. However, course creation is disabled for this project demo in order to keep database clean. \
+                Only Adminitrattor or Super-user can create courses as of now.')
     
     return render(request, 'onlinecourse/create_course.html', {
         'form': course_create_form

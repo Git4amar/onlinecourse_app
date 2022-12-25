@@ -31,9 +31,9 @@ CRISPY_FAIL_SILENTLY = not DEBUG
 # <HINT> add your cloud host here
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-#CSRF_COOKIE_SECURE = bool(int(os.environ.get("CSRF_COOKIE_SECURE")))
-#SESSION_COOKIE_SECURE = bool(int(os.environ.get("SESSION_COOKIE_SECURE")))
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_COOKIE_SECURE = bool(int(os.environ.get("CSRF_COOKIE_SECURE")))
+SESSION_COOKIE_SECURE = bool(int(os.environ.get("SESSION_COOKIE_SECURE")))
 
 # Application definition
 INSTALLED_APPS = [
