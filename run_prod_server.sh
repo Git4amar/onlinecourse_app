@@ -20,16 +20,19 @@ docker compose -f docker-compose.prod.yml exec web python manage.py createsuperu
 
 sleep 2
 echo -e "\n>>> Checking Certbot"
-docker compose -f docker-compose.prod.yml run certbot ceronly --webroot --webroot-path /var/www/certbot -d practice2deploy4amar.com -d www.practice2deploy4amar.com --dry-run -v
+docker compose -f docker-compose.prod.yml run certbot certonly --webroot --webroot-path /var/www/certbot -d practice2deploy4amar.com -d www.practice2deploy4amar.com --dry-run -v
 
-#sleep 5
-#echo -e "\n>>> Getting certificates"
-#docker compose -f docker-compose.prod.yml run certbot ceronly --webroot --webroot-path /var/www/certbot -d practice2deploy4amar.com -d www.practice2deploy4amar.com -v
-#
-#sleep 5
-#echo -e "\n>>> Configuring NGINX to serve certificate"
-#rm nginx/conf/nginx.initial.conf
-#rsync nginx.final.conf nginx/conf/
-#
-#echo -e "\n>>> Restarting Server containers/services"
-#docker compose -f docker-compose.prod.yml restart
+sleep 5
+echo -e "\n>>> Getting certificates"
+docker compose -f docker-compose.prod.yml run certbot certonly --webroot --webroot-path /var/www/certbot -d practice2deploy4amar.com -d www.practice2deploy4amar.com -v
+
+sleep 5
+echo -e "\n>>> Configuring NGINX to serve certificate"
+rm nginx/conf/nginx.initial.conf
+rsync nginx.final.conf nginx/conf/
+
+echo -e "\n>>> Restarting Server containers/services"
+docker compose -f docker-compose.prod.yml restart
+
+# schedule a cron job to renew certs
+# docker compose -f docker-compose.prod.yml run certbot renew

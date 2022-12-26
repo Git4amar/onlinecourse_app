@@ -12,6 +12,6 @@
 ### Brief summary:
 * An online-course appication built using Django, JavaScript, PostgreSQL and Bootstrap. Application is deployed on a virtual server instance on cloud. 
 
-* Deployment model utilizes Docker conatiners / services to run application's NGINX server, WSGI server (Gunicorn), Django web-application & PostgreSQL database.
+* Deployment model utilizes Docker containers / services to run application's NGINX server, WSGI server (Gunicorn), Django web-application & PostgreSQL database.
 
 
