@@ -15,6 +15,9 @@ docker compose -f docker-compose.prod.yml exec web python manage.py migrate
 echo -e "\n>>> Collecting Static"
 docker compose -f docker-compose.prod.yml exec web python manage.py collectstatic
 
+echo -e "\n>>> Creating Superuser"
+docker compose -f docker-compose.prod.yml exec web python manage.py createsuperuser --noinput
+
 sleep 2
 echo -e "\n>>> Checking Certbot"
 docker compose -f docker-compose.prod.yml run certbot ceronly --webroot --webroot-path /var/www/certbot -d practice2deploy4amar.com -d www.practice2deploy4amar.com --dry-run -v
